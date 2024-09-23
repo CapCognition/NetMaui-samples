@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:CapCognition.Maui.Views;assembly=CapCognition.Maui"
+             xmlns:views11="clr-namespace:NetMaui_samples.Views"
+             x:Class="NetMaui_samples.Views.CameraMultiPage"
+             BackgroundColor="{StaticResource Background}"
+             x:DataType="views11:CameraMultiPage">
+    <ContentPage.Content>
+
+        <Grid
+            RowDefinitions="50,*,100"
+            ColumnDefinitions="50,50,*,50,50">
+
+            <views:ImageCaptureView
+                x:Name="ImageCaptureView"
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                Grid.Column="0"
+                Grid.ColumnSpan="5"
+                RequestedPreviewResolutionWidth="1920"
+                RequestedCaptureResolutionWidth="1080"
+                UseFrontCamera ="False"
+                FillPreviewToView="True"
+                DisplayWatermark="True"
+                CaptureIntervalInMs="16"/>
+
+            <!--Preview Of Captured Image-->
+            <Image                 
+                x:Name="PreviewImage"
+                Grid.Row="1"
+                Grid.Column="3"
+                Grid.ColumnSpan="2"
+                HeightRequest="100"
+                WidthRequest="100"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="OnPreviewImageTapped"
+                        NumberOfTapsRequired="1"/>
+                </Image.GestureRecognizers>
+            </Image>
+
+            <!--Top Left Toggle Flash-->
+            <ImageButton
+                Grid.Row="0"
+                Grid.Column="0"
+                Source="flash.png"
+                Clicked="OnToggleTorch"
+                BackgroundColor="Transparent"
+                HorizontalOptions="Start"
+                VerticalOptions="Start"
+                WidthRequest="50"
+                HeightRequest="50"
+                Opacity="{Binding FlashOpacity}"
+                Margin="5"/>
+
+            <!--Top Right Toggle Camera-->
+            <ImageButton
+                Grid.Row="0"
+                Grid.Column="4"
+                BackgroundColor="Transparent"
+                Clicked="OnChangeCamera"
+                Source="changeCamera.png"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                WidthRequest="50"
+                HeightRequest="50"
+                Margin="5"/>
+
+            <!--Bottom Center Capture-->
+            <Button
+                x:Name="IntervalButton"
+                Grid.Row="2"
+                Grid.Column="2"
+                Pressed="CaptureButton_OnPressed"
+                Released="CaptureButton_OnReleased"
+                Clicked="OnStartIntervalClicked"
+                Style="{StaticResource DefaultButton}"
+                Text="{Binding IntervalButtonText}"
+                HorizontalOptions="Center"
+                VerticalOptions="End"
+                Margin="10"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NetMaui_samples.Views.MainPage">
+
+    <ScrollView>
+        <StackLayout
+        Margin="20">
+
+            <!--Logo-->
+            <Image Source="Logo.png"
+               HeightRequest="100"
+               VerticalOptions="Start"
+               HorizontalOptions="CenterAndExpand"
+               Aspect="AspectFit"/>
+
+            <!--Title for Camera-->
+            <StackLayout
+            Orientation="Horizontal"
+            Margin="0,50,0,0">
+
+                <Image Source="camera.png"
+                   HeightRequest="50"
+                   WidthRequest="50"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   Aspect="AspectFit"/>
+
+                <Label Text="Camera" 
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="Start"
+                   Style="{StaticResource TitleLabel}"/>
+            </StackLayout>
+
+            <!--Camera-->
+            <StackLayout
+            Orientation="Horizontal"
+            Spacing="20">
+
+                <Button Text="Single photo"
+                    Clicked="OnSinglePhotoClicked"
+                    Style="{StaticResource DefaultButton}"/>
+
+                <Button Text="Multi photo"
+                    Clicked="OnMultiPhotoClicked"
+                    Style="{StaticResource DefaultButton}"/>
+
+            </StackLayout>
+
+            <!--Title for Barcode-->
+            <StackLayout
+            Orientation="Horizontal"
+            Margin="0,50,0,0">
+
+                <Image Source="barcode.png"
+                   HeightRequest="50"
+                   WidthRequest="50"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   Aspect="AspectFit"/>
+
+                <Label Text="Barcode"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="Start"
+                   Style="{StaticResource TitleLabel}"/>
+            </StackLayout>
+
+            <!--Barcode-->
+            <StackLayout
+            Orientation="Horizontal"
+            Spacing="20">
+
+                <Button Text="Barcode page"
+                    Clicked="OnBarcodeClicked"
+                    Style="{StaticResource DefaultButton}"/>
+            </StackLayout>
+
+            <!--Title for LPR-->
+            <StackLayout
+            Orientation="Horizontal"
+            Margin="0,50,0,0">
+
+                <Image Source="licenseplate.png"
+                   HeightRequest="50"
+                   WidthRequest="50"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   Aspect="AspectFit"/>
+
+                <Label Text="LPR"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="Start"
+                   Style="{StaticResource TitleLabel}"/>
+            </StackLayout>
+
+            <!--LPR-->
+            <StackLayout
+            Orientation="Horizontal"
+            Spacing="20">
+
+                <Button Text="LPR page"
+                    Clicked="OnLPRClicked"
+                    Style="{StaticResource DefaultButton}"/>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

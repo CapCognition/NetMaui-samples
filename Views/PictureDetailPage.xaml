@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views1="clr-namespace:NetMaui_samples.Views"
+             x:Class="NetMaui_samples.Views.PictureDetailPage"
+             BackgroundColor="{StaticResource Background}"
+             x:DataType="views1:PictureDetailPage">
+    <ContentPage.Content>
+        <Grid>
+            <!--Preview Of Captured Image-->
+            <Image                 
+                x:Name="PreviewImage"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Aspect="AspectFit"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:CapCognition.Maui.Views;assembly=CapCognition.Maui"
+             x:Class="NetMaui_samples.Views.LPRMainPage"
+             BackgroundColor="{StaticResource Background}">
+    <ContentPage.Content>
+
+        <StackLayout>
+            <views:RecognitionView
+                x:Name="RecognitionView"
+                AutoOpenCamera="False"
+                RequestedPreviewResolutionWidth="1920"
+                RequestedCaptureResolutionWidth="1024"
+                UseFrontCamera="False"
+                FillPreviewToView="True"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
