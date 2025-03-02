@@ -1,6 +1,7 @@
 ﻿using CapCognition.Maui.BarcodeScanning;
 using CapCognition.Maui.Helpers;
 using CapCognition.Maui.LPR;
+using CapCognition.Maui.LPR.Shared.ConsoleLogger;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
@@ -10,6 +11,9 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
+        
+
         builder
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
@@ -29,15 +33,22 @@ public static class MauiProgram
                     usedOptions: [
                         //Add the options you want to use here
                         new BarcodeRecognitionOption(),
-                        new LPROption(),
+                        new LicensePlateDetectionRecognitionOption(),
                     ],
                     enableProcessingLogs: true);
             });
 
-#if DEBUG
+        #if DEBUG
+        builder.Logging.SetMinimumLevel(LogLevel.Debug);
         builder.Logging.AddDebug();
-#endif
+        #else
+            builder.Logging.SetMinimumLevel(LogLevel.Debug);
+            builder.Logging.AddProvider(new ConsoleLoggerProvider());
+        #endif
 
-        return builder.Build();
+        var app = builder.Build();
+        CapCognition.Maui.Core.Shared.CapCognition.LoggerFactory = new ConsoleLoggerFactory();
+
+        return app;
     }
 }

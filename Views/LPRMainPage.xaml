@@ -6,7 +6,7 @@
              BackgroundColor="{StaticResource Background}">
     <ContentPage.Content>
 
-        <StackLayout>
+        <Grid>
             <views:RecognitionView
                 x:Name="RecognitionView"
                 AutoOpenCamera="False"
@@ -14,6 +14,6 @@
                 RequestedCaptureResolutionWidth="1024"
                 UseFrontCamera="False"
                 FillPreviewToView="True"/>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

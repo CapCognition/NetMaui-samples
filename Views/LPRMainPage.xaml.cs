@@ -1,5 +1,6 @@
 ﻿using CapCognition.Maui.Core.Shared.Common;
 using CapCognition.Maui.LPR;
+using CapCognition.Maui.LPR.Shared;
 using SkiaSharp;
 
 namespace NetMaui_samples.Views
@@ -13,91 +14,110 @@ namespace NetMaui_samples.Views
             BindingContext = this;
             Title = "License Plate Recognition";
 
-            _licensePlateOptions = new LPROption()
+            _licensePlateOptions = new LicensePlateDetectionRecognitionOption()
             {
                 EnableOverlays = true,
-                DisplayLicensePlateSurroundingBox = true,
-                DisplayVehicleSurroundingBox = true,
+                DisplayLicensePlateSurroundingBox = false,
+                DisplayVehicleSurroundingBox = false,
                 UseCroppedImageForRecognition = true,
-                UseModelResolution = LPROption.RecognitionModelResolution.MediumResolution,
-                UseModelSize = LPROption.ModelSize.Small,
+                DoAutomaticDetectionOptimization = false,
+                DetectVehicleType = false
             };
-
             RecognitionView.AddOption(_licensePlateOptions);
+
+            Loaded += OnLoaded;
+
         }
 
-        protected override async void OnAppearing()
+        private async void OnLoaded(object? sender, EventArgs e)
         {
-            base.OnAppearing();
-
-            await RecognitionView.RequestAllPermissionAsync();
-
-            //initialize event will not be fired, when asked here for the permissions
-            RecognitionView.InitializedEvt += () =>
+            try
             {
-                //simulate autostart
-                OnCameraOpen(null, null!);
-                //RecognitionView.OpenCamera();
-            };
+                var lpModelName = LicensePlateDetectionConstants.LicensePlateModelFileName320N + ".ccml";
+                var textModelName = LicensePlateDetectionConstants.TextModelFileName320N + ".ccml";
+                var vehicleModelName = LicensePlateDetectionConstants.VehicleModelFileName320N + ".ccml";
+
+                var plateModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
+                    FileSystem.Current.OpenAppPackageFileAsync(lpModelName).GetAwaiter().GetResult(),
+                    lpModelName);
+                var textModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
+                    FileSystem.Current.OpenAppPackageFileAsync(textModelName).GetAwaiter().GetResult(),
+                    textModelName);
+
+                if (_licensePlateOptions.DetectVehicleType)
+                {
+                    var vehicleModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
+                        FileSystem.Current.OpenAppPackageFileAsync(vehicleModelName).GetAwaiter().GetResult(),
+                        vehicleModelName);
+
+                    _licensePlateOptions.SetModelStreams(plateModelStream, textModelStream, vehicleModelStream);
+                }
+                else
+                {
+                    _licensePlateOptions.SetModelStreams(plateModelStream, textModelStream);
+                }
+                await _licensePlateOptions.CreateAndPrepareModelsAsync();
+
+                var result = await RecognitionView.RequestAllPermissionAsync();
+                if (!result)
+                {
+                    await Navigation.PopAsync();
+                }
+
+                if (!RecognitionView.Initialized)
+                {
+                    RecognitionView.InitializedEvt += OpenCamera;
+                }
+                else
+                {
+                    OpenCamera();
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
-        private async void OnCameraOpen(object? sender, EventArgs e)
+        private void OpenCamera()
         {
             if (RecognitionView.CameraIsOpen)
             {
                 return;
             }
 
-            if (_licensePlateOptions.Model == null)
+            RecognitionView.CameraOpenedEvt += OnCameraOpened;
+            RecognitionView.OpenCamera();
+            Console.WriteLine("###Camera opening returned");
+        }
+
+        private void OnCameraOpened(bool success)
+        {
+            RecognitionView.CameraOpenedEvt -= OnCameraOpened;
+
+            if (!success)
             {
-                //simulate parallel downloading of the models without blocking the main thread and image processing
-                //the recognition can be started without the model being downloaded. When the model finished downloading the decoder automatically starts the recognition
-                _licensePlateOptions.ModelsDownloadStartedEvt += OnLicensePlateModelsDownloadStarted;
-                _licensePlateOptions.ModelLoadingProgressEvt += OnLicensePlateModelLoadingProgress;
-                _licensePlateOptions.ModelDownloadedEvt += OnLicensePlateModelDownloaded;
-                _licensePlateOptions.ModelsDownloadedEvt += OnLicensePlateModelsDownloaded;
-                //disable and the model will be downloaded in the background when opening camera
-                //await _licensePlateOptions.CreateAndPrepareModelParallelAsync();
+                Console.WriteLine("Camera open failed");
+                return;
             }
 
-            await RecognitionView.OpenCameraAsync();
-            RecognitionView.CaptureIntervalInMs = 50;
-            RecognitionView.StartContinuousRecognition(true);
+            Console.WriteLine("###Camera opened");
+
+            RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
             RecognitionView.RecognitionResultEvt += OnRecognitionResult;
+            RecognitionView.StartContinuousRecognition(true);
+            Console.WriteLine("###Recog started");
         }
 
-        private void OnLicensePlateModelsDownloadStarted(int noOfModelsToDownload)
+        private void OnRecognitionResult(RecognitionResult? result, SKBitmap bitmap)
         {
-            Console.WriteLine($"Start downloading {noOfModelsToDownload} License plate models");
-        }
-
-        private void OnLicensePlateModelLoadingProgress(long readBytes, int indexOfModel, int noOfModelsToDownload)
-        {
-            Console.WriteLine($"License plate model ({indexOfModel}/{noOfModelsToDownload}) downloading. {readBytes} bytes read");
-        }
-
-        private void OnLicensePlateModelDownloaded(bool success, int indexOfModel, int noOfModelsToDownload)
-        {
-            Console.WriteLine($"License plate model ({indexOfModel}/{noOfModelsToDownload}) finished downloading");
-        }
-
-        private void OnLicensePlateModelsDownloaded(bool success, int noOfModelsToDownload)
-        {
-            Console.WriteLine($"Finished downloading {noOfModelsToDownload} License plate models success={success}");
-            _licensePlateOptions!.ModelsDownloadStartedEvt -= OnLicensePlateModelsDownloadStarted;
-            _licensePlateOptions.ModelLoadingProgressEvt -= OnLicensePlateModelLoadingProgress;
-            _licensePlateOptions.ModelDownloadedEvt -= OnLicensePlateModelDownloaded;
-            _licensePlateOptions.ModelsDownloadedEvt -= OnLicensePlateModelsDownloaded;
-        }
-
-        private void OnRecognitionResult(RecognitionResult result, SKBitmap bitmap)
-        {
-            result.Results.ForEach(r =>
+            result?.Results.ForEach(r =>
             {
-                var lprResult = (RecognitionProcessorLPRResult)r;
-                Console.WriteLine($"Plate number: {lprResult.PlateNumber}");
+                var lprResult = (RecognitionProcessorLicensePlateDetectionResult)r;
+                Console.WriteLine($"Plate number validated: {lprResult.PlateNumberValidated}");
+                Console.WriteLine($"Plate number raw: {lprResult.PlateNumberRaw}");
                 Console.WriteLine($"Country: {lprResult.PlateCountryCode}");
-                Console.WriteLine($"Vehicle type: {lprResult.Type}");
+                Console.WriteLine($"Vehicle type: {lprResult.VehicleType}");
             });
         }
 
@@ -107,6 +127,6 @@ namespace NetMaui_samples.Views
             base.OnDisappearing();
         }
 
-        private readonly LPROption _licensePlateOptions;
+        private readonly LicensePlateDetectionRecognitionOption _licensePlateOptions;
     }
 }

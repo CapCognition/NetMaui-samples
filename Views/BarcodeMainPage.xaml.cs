@@ -29,29 +29,48 @@ public partial class BarcodeMainPage : ContentPage
 
     protected override async void OnAppearing()
     {
-        base.OnAppearing();
-
-        await RecognitionView.RequestAllPermissionAsync();
-
-        //initialize event will not be fired, when asked here for the permissions
-        RecognitionView.InitializedEvt += () =>
+        try
         {
-            //simulate autostart
-            OnCameraOpen(null, null!);
-            //RecognitionView.OpenCamera();
-        };
+            base.OnAppearing();
+            var result = await RecognitionView.RequestAllPermissionAsync();
+
+            if (!result)
+            {
+                await Navigation.PopAsync();
+            }
+
+            RecognitionView.InitializedEvt += OpenCamera;
+        }
+        catch (Exception)
+        {
+            //Show error message
+            return;
+        }
     }
 
-    private async void OnCameraOpen(object? sender, EventArgs e)
+    private void OpenCamera()
     {
         if (RecognitionView.CameraIsOpen)
         {
             return;
         }
 
-        await RecognitionView.OpenCameraAsync();
-        RecognitionView.CaptureIntervalInMs = 50;
+        RecognitionView.CameraOpenedEvt += OnCameraOpened;
+        RecognitionView.OpenCamera();
+    }
+
+    private void OnCameraOpened(bool success)
+    {
+        RecognitionView.CameraOpenedEvt -= OnCameraOpened;
+
+        if (!success)
+        {
+            //Show error message
+            return;
+        }
+
         RecognitionView.StartContinuousRecognition(true);
+        RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
         RecognitionView.RecognitionResultEvt += OnRecognitionResult;
     }
 
@@ -102,6 +121,8 @@ public partial class BarcodeMainPage : ContentPage
                     break;
             }
         });
+
+        
 
     }
 }

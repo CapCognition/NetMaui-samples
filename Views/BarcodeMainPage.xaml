@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<maui:ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                  xmlns:maui="http://schemas.microsoft.com/dotnet/2021/maui"
-                  xmlns:views="clr-namespace:CapCognition.Maui.Views;assembly=CapCognition.Maui"
-                  x:Class="NetMaui_samples.Views.BarcodeMainPage"
-                  BackgroundColor="{StaticResource Background}">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:CapCognition.Maui.Views;assembly=CapCognition.Maui"
+             x:Class="NetMaui_samples.Views.BarcodeMainPage"
+             BackgroundColor="{StaticResource Background}">
     <ContentPage.Content>
 
         <Grid>
@@ -17,4 +16,4 @@
                 FillPreviewToView="True"/>
         </Grid>
     </ContentPage.Content>
-</maui:ContentPage>
+</ContentPage>
