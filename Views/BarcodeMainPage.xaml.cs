@@ -17,6 +17,7 @@ public partial class BarcodeMainPage : ContentPage
         {
             EnableMultiCodeReader = false,
             EnableBarcodeOverlays = true,
+            TryInverted = true,
             BinarizerToUse = BarcodeRecognitionOption.BinarizerType.HistogrammBinarizer,
             BarcodeFormatsToRecognize =
             [

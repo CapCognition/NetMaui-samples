@@ -1,6 +1,5 @@
 ﻿using CapCognition.Maui.Core.Shared.Common;
 using CapCognition.Maui.LPR;
-using CapCognition.Maui.LPR.Shared;
 using SkiaSharp;
 
 namespace NetMaui_samples.Views
@@ -8,22 +7,13 @@ namespace NetMaui_samples.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LPRMainPage : ContentPage
     {
-        public LPRMainPage()
+        public LPRMainPage(LicensePlateDetectionRecognitionOption lprOptions)
         {
             InitializeComponent();
             BindingContext = this;
             Title = "License Plate Recognition";
 
-            _licensePlateOptions = new LicensePlateDetectionRecognitionOption()
-            {
-                EnableOverlays = true,
-                DisplayLicensePlateSurroundingBox = false,
-                DisplayVehicleSurroundingBox = false,
-                UseCroppedImageForRecognition = true,
-                DoAutomaticDetectionOptimization = false,
-                DetectVehicleType = false
-            };
-            RecognitionView.AddOption(_licensePlateOptions);
+            RecognitionView.AddOption(lprOptions);
 
             Loaded += OnLoaded;
 
@@ -33,31 +23,6 @@ namespace NetMaui_samples.Views
         {
             try
             {
-                var lpModelName = LicensePlateDetectionConstants.LicensePlateModelFileName320N + ".ccml";
-                var textModelName = LicensePlateDetectionConstants.TextModelFileName320N + ".ccml";
-                var vehicleModelName = LicensePlateDetectionConstants.VehicleModelFileName320N + ".ccml";
-
-                var plateModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
-                    FileSystem.Current.OpenAppPackageFileAsync(lpModelName).GetAwaiter().GetResult(),
-                    lpModelName);
-                var textModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
-                    FileSystem.Current.OpenAppPackageFileAsync(textModelName).GetAwaiter().GetResult(),
-                    textModelName);
-
-                if (_licensePlateOptions.DetectVehicleType)
-                {
-                    var vehicleModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
-                        FileSystem.Current.OpenAppPackageFileAsync(vehicleModelName).GetAwaiter().GetResult(),
-                        vehicleModelName);
-
-                    _licensePlateOptions.SetModelStreams(plateModelStream, textModelStream, vehicleModelStream);
-                }
-                else
-                {
-                    _licensePlateOptions.SetModelStreams(plateModelStream, textModelStream);
-                }
-                await _licensePlateOptions.CreateAndPrepareModelsAsync();
-
                 var result = await RecognitionView.RequestAllPermissionAsync();
                 if (!result)
                 {
@@ -126,7 +91,5 @@ namespace NetMaui_samples.Views
             RecognitionView.Terminate();
             base.OnDisappearing();
         }
-
-        private readonly LicensePlateDetectionRecognitionOption _licensePlateOptions;
     }
 }
