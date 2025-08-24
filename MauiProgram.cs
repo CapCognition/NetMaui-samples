@@ -1,7 +1,7 @@
 ﻿using CapCognition.Maui.BarcodeScanning;
+using CapCognition.Maui.Core.Shared.ConsoleLogger;
 using CapCognition.Maui.Helpers;
 using CapCognition.Maui.LPR;
-using CapCognition.Maui.LPR.Shared.ConsoleLogger;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
@@ -32,8 +32,8 @@ public static class MauiProgram
                     ],
                     usedOptions: [
                         //Add the options you want to use here
-                        new BarcodeRecognitionOption(),
-                        new LicensePlateDetectionRecognitionOption(),
+                        BarcodeRecognition.Use,
+                        LicensePlateDetection.Use,
                     ],
                     enableProcessingLogs: true);
             });

@@ -1,6 +1,7 @@
 ﻿using CapCognition.Maui.BarcodeScanning;
 using CapCognition.Maui.Core.Shared.Common;
 using SkiaSharp;
+using System.Text;
 
 namespace NetMaui_samples.Views;
 
@@ -13,19 +14,35 @@ public partial class BarcodeMainPage : ContentPage
         BindingContext = this;
         Title = "Barcode";
 
-        RecognitionView.AddOption(new BarcodeRecognitionOption
+        var recogOptions = new RecognitionOptionBuilder()
+            .AddBarcodeRecognitionOption()
+                .EnableMultiCodeReader()
+                .TryInverted()
+                .SetBinarizer(BarcodeRecognitionOptions.BinarizerType.HybridBinarizer)
+                .SetBarcodeFormats(new[] { BarcodeRecognitionOptions.BarcodeFormat.QRCode })
+                .SetEncoding(Encoding.UTF8)
+
+                .AddBarcodeRecognitionOverlayDrawingOption()
+                    .EnableBarcodeOverlays()
+                    .SetSurroundingRectColor(Color.FromRgb(255, 0, 0))
+                    .SetSurroundingStrokeWidth(2)
+                    .SetOneDimensionalRectWidth(5)
+                    .Done()
+                .Done()
+            .Build();
+
+        foreach (var option in recogOptions)
         {
-            EnableMultiCodeReader = false,
-            EnableBarcodeOverlays = true,
-            TryInverted = true,
-            BinarizerToUse = BarcodeRecognitionOption.BinarizerType.HistogrammBinarizer,
-            BarcodeFormatsToRecognize =
-            [
-                BarcodeRecognitionOption.BarcodeFormat.QRCode,
-                BarcodeRecognitionOption.BarcodeFormat.DataMatrix,
-                BarcodeRecognitionOption.BarcodeFormat.EAN13
-            ]
-        });
+            RecognitionView.AddOption(option);
+        }
+        _recognitionOptions = recogOptions;
+
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        _recognitionOptions.Dispose();
     }
 
     protected override async void OnAppearing()
@@ -122,8 +139,7 @@ public partial class BarcodeMainPage : ContentPage
                     break;
             }
         });
-
-        
-
     }
+
+    private List<RecognitionOptions> _recognitionOptions;
 }

@@ -1,4 +1,5 @@
-﻿using CapCognition.Maui.LPR;
+﻿using CapCognition.Maui.Core.Shared.Common;
+using CapCognition.Maui.LPR;
 using CapCognition.Maui.LPR.Shared;
 
 namespace NetMaui_samples.Views;
@@ -29,43 +30,57 @@ public partial class MainPage : ContentPage
 
     private async void OnLPRClicked(object sender, EventArgs e)
     {
+        //Note: 
         // The preparation of the options and the loading of the models can be done in upfront and in a background thread.
         // For simplicity, we do it here in the UI thread and right before opening the page.
-        var options = new LicensePlateDetectionRecognitionOption()
-        {
-            EnableOverlays = true,
-            DisplayLicensePlateSurroundingBox = false,
-            DisplayVehicleSurroundingBox = false,
-            UseCroppedImageForRecognition = true,
-            DoAutomaticDetectionOptimization = false,
-            DetectVehicleType = false
-        };
 
-        var lpModelName = LicensePlateDetectionConstants.LicensePlateModelFileName320N + ".ccml";
-        var textModelName = LicensePlateDetectionConstants.TextModelFileName320N + ".ccml";
-        var vehicleModelName = LicensePlateDetectionConstants.VehicleModelFileName320N + ".ccml";
 
-        var plateModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
+        var lpModelName = LicensePlateDetectionConstants.LicensePlateModelFileName320N + LicensePlateDetectionConstants.ModelExtension;
+        var ncLpModelName = LicensePlateDetectionConstants.LicensePlateNoCountryModelFileName320N + LicensePlateDetectionConstants.ModelExtension;
+        var textModelName = LicensePlateDetectionConstants.TextModelFileName320N + LicensePlateDetectionConstants.ModelExtension;
+        var vehicleModelName = LicensePlateDetectionConstants.VehicleModelFileName320N + LicensePlateDetectionConstants.ModelExtension;
+
+
+        var plateModelStream = new LicensePlateDetectionRecognitionOptions.StreamInfo(
             FileSystem.Current.OpenAppPackageFileAsync(lpModelName).GetAwaiter().GetResult(),
             lpModelName);
-        var textModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
+        var ncPlateModelStream = new LicensePlateDetectionRecognitionOptions.StreamInfo(
+            FileSystem.Current.OpenAppPackageFileAsync(ncLpModelName).GetAwaiter().GetResult(),
+            ncLpModelName);
+        var textModelStream = new LicensePlateDetectionRecognitionOptions.StreamInfo(
             FileSystem.Current.OpenAppPackageFileAsync(textModelName).GetAwaiter().GetResult(),
             textModelName);
+        var vehicleModelStream = new LicensePlateDetectionRecognitionOptions.StreamInfo(
+            FileSystem.Current.OpenAppPackageFileAsync(vehicleModelName).GetAwaiter().GetResult(),
+            vehicleModelName);
 
-        if (options.DetectVehicleType)
-        {
-            var vehicleModelStream = new LicensePlateDetectionRecognitionOption.StreamInfo(
-                FileSystem.Current.OpenAppPackageFileAsync(vehicleModelName).GetAwaiter().GetResult(),
-                vehicleModelName);
+        var recogOptions = new RecognitionOptionBuilder()
+                .AddLicensePlateDetectionRecognitionOption()
+                    .UseCroppedImageForRecognition()
+                    .DoAutomaticDetectionOptimization()
+                    .SetRecognitionQuality(LicensePlateDetectionRecognitionOptionBuilder.RecognitionQuality.Low)
+                    //.UseRecognitionModeCountryLicencePlateThenVehicle(plateModelStream, textModelStream, vehicleModelStream)
+                    .UseRecognitionModeNoCountryLicencePlateThenVehicle(ncPlateModelStream, textModelStream, vehicleModelStream)
+                    //.UseRecognitionModeCountryLicencePlateOnly(plateModelStream, textModelStream)
+                    //.UseRecognitionModeVehicleOnly(vehicleModelStream)
+                    //.UseRecognitionModeVehicleThenCountryLicencePlate(plateModelStream, textModelStream, vehicleModelStream)
+                    //.UseRecognitionModeVehicleThenNoCountryLicencePlate(ncPlateModelStream, textModelStream, vehicleModelStream)
+                    .ConfigureOption(option =>
+                    {
+                        option.CreateAndPrepareModelsAsync().GetAwaiter().GetResult();
+                    })
+                    .AddLicensePlateRecognitionOverlayDrawingOption()
+                        .EnableOverlays()
+                        .DisplayLicensePlateSurroundingBox()
+                        .DisplayVehicleSurroundingBox()
+                        .SetVehicleSurroundingRectColor(Color.FromRgb(0, 255, 0))
+                        .SetVehicleSurroundingRectStrokeWidth(1)
+                        .SetLicensePlateSurroundingRectColor(Color.FromRgb(255, 0, 0))
+                        .SetLicensePlateSurroundingRectStrokeWidth(1)
+                    .Done()
+                .Done()
+                .Build();
 
-            options.SetModelStreams(plateModelStream, textModelStream, vehicleModelStream);
-        }
-        else
-        {
-            options.SetModelStreams(plateModelStream, textModelStream);
-        }
-        await options.CreateAndPrepareModelsAsync();
-
-        await Navigation.PushAsync(new LPRMainPage(options));
+        await Navigation.PushAsync(new LPRMainPage(recogOptions));
     }
 }
