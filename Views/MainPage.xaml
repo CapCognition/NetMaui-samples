@@ -3,105 +3,70 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NetMaui_samples.Views.MainPage">
 
-    <ScrollView>
-        <StackLayout
-        Margin="20">
+    <ScrollView BackgroundColor="{StaticResource Background}">
+        <VerticalStackLayout Margin="24,48" Spacing="32">
 
-            <!--Logo-->
             <Image Source="Logo.png"
-               HeightRequest="100"
-               VerticalOptions="Start"
-               HorizontalOptions="CenterAndExpand"
-               Aspect="AspectFit"/>
-
-            <!--Title for Camera-->
-            <StackLayout
-            Orientation="Horizontal"
-            Margin="0,50,0,0">
-
-                <Image Source="camera.png"
-                   HeightRequest="50"
-                   WidthRequest="50"
-                   VerticalOptions="Center"
+                   HeightRequest="80"
                    HorizontalOptions="Center"
-                   Aspect="AspectFit"/>
+                   Aspect="AspectFit"
+                   Opacity="0.9" />
 
-                <Label Text="Camera" 
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="Start"
-                   Style="{StaticResource TitleLabel}"/>
-            </StackLayout>
+            <VerticalStackLayout Spacing="12">
+                <StackLayout Orientation="Horizontal" Spacing="12" VerticalOptions="Center">
+                    <Image Source="camera.png"
+                           HeightRequest="32"
+                           WidthRequest="32"
+                           VerticalOptions="Center"
+                           Aspect="AspectFit"
+                           Opacity="0.8" />
+                    <Label Text="Camera"
+                           VerticalOptions="Center"
+                           Style="{StaticResource TitleLabel}" />
+                </StackLayout>
+                <VerticalStackLayout Spacing="10">
+                    <Button Text="Single photo"
+                            Clicked="OnSinglePhotoClicked"
+                            Style="{StaticResource DefaultButton}" />
+                    <Button Text="Multi photo"
+                            Clicked="OnMultiPhotoClicked"
+                            Style="{StaticResource DefaultButton}" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
 
-            <!--Camera-->
-            <StackLayout
-            Orientation="Horizontal"
-            Spacing="20">
-
-                <Button Text="Single photo"
-                    Clicked="OnSinglePhotoClicked"
-                    Style="{StaticResource DefaultButton}"/>
-
-                <Button Text="Multi photo"
-                    Clicked="OnMultiPhotoClicked"
-                    Style="{StaticResource DefaultButton}"/>
-
-            </StackLayout>
-
-            <!--Title for Barcode-->
-            <StackLayout
-            Orientation="Horizontal"
-            Margin="0,50,0,0">
-
-                <Image Source="barcode.png"
-                   HeightRequest="50"
-                   WidthRequest="50"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"
-                   Aspect="AspectFit"/>
-
-                <Label Text="Barcode"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="Start"
-                   Style="{StaticResource TitleLabel}"/>
-            </StackLayout>
-
-            <!--Barcode-->
-            <StackLayout
-            Orientation="Horizontal"
-            Spacing="20">
-
+            <VerticalStackLayout Spacing="12">
+                <StackLayout Orientation="Horizontal" Spacing="12" VerticalOptions="Center">
+                    <Image Source="barcode.png"
+                           HeightRequest="32"
+                           WidthRequest="32"
+                           VerticalOptions="Center"
+                           Aspect="AspectFit"
+                           Opacity="0.8" />
+                    <Label Text="Barcode"
+                           VerticalOptions="Center"
+                           Style="{StaticResource TitleLabel}" />
+                </StackLayout>
                 <Button Text="Barcode page"
-                    Clicked="OnBarcodeClicked"
-                    Style="{StaticResource DefaultButton}"/>
-            </StackLayout>
+                        Clicked="OnBarcodeClicked"
+                        Style="{StaticResource DefaultButton}" />
+            </VerticalStackLayout>
 
-            <!--Title for LPR-->
-            <StackLayout
-            Orientation="Horizontal"
-            Margin="0,50,0,0">
-
-                <Image Source="licenseplate.png"
-                   HeightRequest="50"
-                   WidthRequest="50"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"
-                   Aspect="AspectFit"/>
-
-                <Label Text="LPR"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="Start"
-                   Style="{StaticResource TitleLabel}"/>
-            </StackLayout>
-
-            <!--LPR-->
-            <StackLayout
-            Orientation="Horizontal"
-            Spacing="20">
-
+            <VerticalStackLayout Spacing="12">
+                <StackLayout Orientation="Horizontal" Spacing="12" VerticalOptions="Center">
+                    <Image Source="licenseplate.png"
+                           HeightRequest="32"
+                           WidthRequest="32"
+                           VerticalOptions="Center"
+                           Aspect="AspectFit"
+                           Opacity="0.8" />
+                    <Label Text="LPR"
+                           VerticalOptions="Center"
+                           Style="{StaticResource TitleLabel}" />
+                </StackLayout>
                 <Button Text="LPR page"
-                    Clicked="OnLPRClicked"
-                    Style="{StaticResource DefaultButton}"/>
-            </StackLayout>
-        </StackLayout>
+                        Clicked="OnLPRClicked"
+                        Style="{StaticResource DefaultButton}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
