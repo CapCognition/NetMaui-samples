@@ -7,13 +7,37 @@
     <ContentPage.Content>
 
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
             <views:RecognitionView
+                Grid.Row="0"
+                Grid.RowSpan="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
                 x:Name="RecognitionView"
                 AutoOpenCamera="False"
                 RequestedPreviewResolutionWidth="1920"
                 RequestedCaptureResolutionWidth="1024"
                 UseFrontCamera="False"
                 FillPreviewToView="True"/>
+
+            <Image
+                x:Name="LPPreview"
+                Grid.Row="1"
+                Grid.Column="3"
+                Aspect="AspectFit"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

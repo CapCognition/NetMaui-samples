@@ -37,12 +37,8 @@ public partial class BarcodeMainPage : ContentPage
         }
         _recognitionOptions = recogOptions;
 
+        Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-    }
-
-    private void OnUnloaded(object? sender, EventArgs e)
-    {
-        _recognitionOptions.Dispose();
     }
 
     protected override async void OnAppearing()
@@ -50,20 +46,49 @@ public partial class BarcodeMainPage : ContentPage
         try
         {
             base.OnAppearing();
-            var result = await RecognitionView.RequestAllPermissionAsync();
 
-            if (!result)
+            if (RecognitionView.Initialized)
             {
-                await Navigation.PopAsync();
+                OpenCamera();
             }
-
-            RecognitionView.InitializedEvt += OpenCamera;
         }
         catch (Exception)
         {
             //Show error message
             return;
         }
+    }
+
+    private async void OnLoaded(object? sender, EventArgs e)
+    {
+        try
+        {
+            var result = await RecognitionView.RequestAllPermissionAsync();
+            if (!result)
+            {
+                await Navigation.PopAsync();
+            }
+
+            Loaded -= OnLoaded;
+            OpenCamera();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+    }
+
+    protected override void OnDisappearing()
+    {
+        RecognitionView.CloseCamera();
+        base.OnDisappearing();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        Unloaded -= OnUnloaded;
+        RecognitionView.Terminate();
+        _recognitionOptions.Dispose();
     }
 
     private void OpenCamera()
@@ -73,8 +98,9 @@ public partial class BarcodeMainPage : ContentPage
             return;
         }
 
+        RecognitionView.CameraOpenedEvt -= OnCameraOpened;
         RecognitionView.CameraOpenedEvt += OnCameraOpened;
-        RecognitionView.OpenCamera();
+        var success = RecognitionView.OpenCamera();
     }
 
     private void OnCameraOpened(bool success)
@@ -87,19 +113,27 @@ public partial class BarcodeMainPage : ContentPage
             return;
         }
 
-        RecognitionView.StartContinuousRecognition(true);
-        RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
-        RecognitionView.RecognitionResultEvt += OnRecognitionResult;
+        DoStartContinuousRecognition();
     }
 
-    protected override void OnDisappearing()
+    private void DoStartContinuousRecognition()
     {
-        base.OnDisappearing();
-
-        RecognitionView.CloseCamera();
-        RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
-        RecognitionView.StopContinuousRecognition();
+        var success = RecognitionView.StartContinuousRecognition();
+        if (success)
+        {
+            RecognitionView.RecognitionResultEvt += OnRecognitionResult;
+        }
     }
+
+    private void DoStopContinuousRecognition()
+    {
+        var success = RecognitionView.StopContinuousRecognition();
+        if (success)
+        {
+            RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
+        }
+    }
+
     private void OnRecognitionResult(RecognitionResult result, SKBitmap bitmap)
     {
         result.Results.ForEach(r =>

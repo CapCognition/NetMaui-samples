@@ -1,6 +1,7 @@
 ﻿using CapCognition.Maui.Core.Shared.Common;
 using CapCognition.Maui.LPR;
 using SkiaSharp;
+using SkiaSharp.Views.Maui.Controls;
 
 namespace NetMaui_samples.Views;
 
@@ -25,6 +26,15 @@ public partial class LPRMainPage : ContentPage
         Unloaded += OnUnloaded;
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (RecognitionView.Initialized)
+        {
+            OpenCamera();
+        }
+    }
     private async void OnLoaded(object? sender, EventArgs e)
     {
         try
@@ -35,14 +45,8 @@ public partial class LPRMainPage : ContentPage
                 await Navigation.PopAsync();
             }
 
-            if (!RecognitionView.Initialized)
-            {
-                RecognitionView.InitializedEvt += OpenCamera;
-            }
-            else
-            {
-                OpenCamera();
-            }
+            Loaded -= OnLoaded;
+            OpenCamera();
         }
         catch (Exception exception)
         {
@@ -50,8 +54,16 @@ public partial class LPRMainPage : ContentPage
         }
     }
 
+    protected override void OnDisappearing()
+    {
+        RecognitionView.CloseCamera();
+        base.OnDisappearing();
+    }
+
     private void OnUnloaded(object? sender, EventArgs e)
     {
+        Unloaded -= OnUnloaded;
+        RecognitionView.Terminate();
         _recognitionOptions.Dispose();
     }
 
@@ -62,8 +74,9 @@ public partial class LPRMainPage : ContentPage
             return;
         }
 
+        RecognitionView.CameraOpenedEvt -= OnCameraOpened;
         RecognitionView.CameraOpenedEvt += OnCameraOpened;
-        RecognitionView.OpenCamera();
+        var success = RecognitionView.OpenCamera();
         Console.WriteLine("###Camera opening returned");
     }
 
@@ -79,31 +92,49 @@ public partial class LPRMainPage : ContentPage
 
         Console.WriteLine("###Camera opened");
 
-        RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
-        RecognitionView.RecognitionResultEvt += OnRecognitionResult;
-        RecognitionView.StartContinuousRecognition(true);
+        DoStartContinuousRecognition();
         Console.WriteLine("###Recog started");
     }
 
-    private void OnRecognitionResult(RecognitionResult? result, SKBitmap bitmap)
+    private void DoStartContinuousRecognition()
     {
-        result?.Results.ForEach(r =>
+        var success = RecognitionView.StartContinuousRecognition();
+        if (success)
         {
-            var lprResult = (RecognitionProcessorLicensePlateDetectionResult)r;
-            Console.WriteLine($"Plate number validated: {lprResult.PlateNumberValidated}");
-            Console.WriteLine($"Plate number raw: {lprResult.PlateNumberRaw}");
-            Console.WriteLine($"Country: {lprResult.PlateCountryCode}");
-            Console.WriteLine($"Vehicle type: {lprResult.VehicleType}");
-        });
+            RecognitionView.RecognitionResultEvt += OnRecognitionResult;
+        }
     }
 
-    protected override void OnDisappearing()
+    private void DoStopContinuousRecognition()
     {
-        RecognitionView.Terminate();
-        base.OnDisappearing();
+        var success = RecognitionView.StopContinuousRecognition();
+        if (success)
+        {
+            RecognitionView.RecognitionResultEvt -= OnRecognitionResult;
+        }
+    }
+
+    private void OnRecognitionResult(RecognitionResult result, SKBitmap bitmap)
+    {
+        var lpResult = result.GetResult<RecognitionProcessorLicensePlateDetectionResult>();
+        if (lpResult == null)
+        {
+            Console.WriteLine($"No LP result {result}");
+            return;
+        }
+
+        Console.WriteLine($"Plate number validated: {lpResult.PlateNumberValidated}");
+        Console.WriteLine($"Plate number raw: {lpResult.PlateNumberRaw}");
+        Console.WriteLine($"Country: {lpResult.PlateCountryCode}");
+        Console.WriteLine($"Vehicle type: {lpResult.VehicleType}");
+
+        var bitmapClone = lpResult.PlateBitmap?.Copy();
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            LPPreview.Source = (SKBitmapImageSource)bitmapClone;
+        });
     }
 
     private List<RecognitionOptions> _recognitionOptions;
     private LicensePlateDetectionRecognitionOptions? _licensePlateOptions;
-
 }

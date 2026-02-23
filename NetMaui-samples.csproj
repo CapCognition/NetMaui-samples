@@ -57,12 +57,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CapCognition.Maui" Version="2.1.4" />
-		<PackageReference Include="CapCognition.Maui.BarcodeScanning" Version="2.1.5" />
-		<PackageReference Include="CapCognition.Maui.LPR" Version="2.1.5" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.100" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
+		<PackageReference Include="CapCognition.Maui" Version="2.1.5" />
+		<PackageReference Include="CapCognition.Maui.BarcodeScanning" Version="2.1.6" />
+		<PackageReference Include="CapCognition.Maui.LPR" Version="2.1.6" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
 		<PackageReference Include="SkiaSharp" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.Views" Version="3.119.2" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.2" />
