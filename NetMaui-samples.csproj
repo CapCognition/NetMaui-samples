@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
+		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
 		<!--<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>-->
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
@@ -57,15 +57,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CapCognition.Maui" Version="2.1.5" />
-		<PackageReference Include="CapCognition.Maui.BarcodeScanning" Version="2.1.6" />
-		<PackageReference Include="CapCognition.Maui.LPR" Version="2.1.6" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
-		<PackageReference Include="SkiaSharp" Version="3.119.2" />
-		<PackageReference Include="SkiaSharp.Views" Version="3.119.2" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.2" />
+		<PackageReference Include="CapCognition.Maui" Version="2.2.0" />
+		<PackageReference Include="CapCognition.Maui.BarcodeScanning" Version="2.2.0" />
+		<PackageReference Include="CapCognition.Maui.LPR" Version="2.2.0" />
+		<PackageReference Include="CapCognition.Maui.YoloModelDetection" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.71" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.71" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9" />
+		<PackageReference Include="SkiaSharp" Version="3.119.4" />
+		<PackageReference Include="SkiaSharp.Views" Version="3.119.4" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.4" />
 	</ItemGroup>
 
 	<ItemGroup>

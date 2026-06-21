@@ -74,12 +74,12 @@ namespace NetMaui_samples.Views
 
         private async void CaptureButton_OnPressed(object sender, EventArgs e)
         {
-            await IntervalButton.ScaleTo(0.9, 50);
+            await IntervalButton.ScaleToAsync(0.9, 50);
         }
 
         private void CaptureButton_OnReleased(object sender, EventArgs e)
         {
-            IntervalButton.ScaleTo(1, 50);
+            IntervalButton.ScaleToAsync(1, 50);
         }
 
         private void OnToggleTorch(object sender, EventArgs e)

@@ -53,6 +53,17 @@
 
             <VerticalStackLayout Spacing="12">
                 <StackLayout Orientation="Horizontal" Spacing="12" VerticalOptions="Center">
+                    <Label Text="Models"
+                           VerticalOptions="Center"
+                           Style="{StaticResource TitleLabel}" />
+                </StackLayout>
+                <Button Text="Prepare options in BG"
+                        Clicked="OnPrepareOptionsInBackground"
+                        Style="{StaticResource DefaultButton}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="12">
+                <StackLayout Orientation="Horizontal" Spacing="12" VerticalOptions="Center">
                     <Image Source="licenseplate.png"
                            HeightRequest="32"
                            WidthRequest="32"

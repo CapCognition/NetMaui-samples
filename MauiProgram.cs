@@ -1,7 +1,9 @@
 ﻿using CapCognition.Maui.BarcodeScanning;
+using CapCognition.Maui.Common;
 using CapCognition.Maui.Core.Shared.ConsoleLogger;
 using CapCognition.Maui.Helpers;
 using CapCognition.Maui.LPR;
+using CapCognition.Maui.YoloModelDetection;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
@@ -25,15 +27,12 @@ public static class MauiProgram
             .ConfigureMauiHandlers(handlers =>
             {
                 handlers.InitializeCapCognitionHandlers(
-                    licenses:
-                    //Add your license keys here
                     [
-                        ""
-                    ],
-                    usedOptions: [
-                        //Add the options you want to use here
-                        BarcodeRecognition.Use,
-                        LicensePlateDetection.Use,
+                        Capture.Use(/* Add your license here */),
+                        Recognition.Use(/* Add your license here */),
+                        BarcodeDetection.Use(/* Add your license here */),
+                        LicensePlateDetection.Use(/* Add your license here */),
+                        YoloModelDetection.Use(/* Add your license here */),
                     ],
                     enableProcessingLogs: true);
             });
