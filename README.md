@@ -1,6 +1,14 @@
 # CapCognition .NET MAUI 10 Samples
 
-Practical .NET MAUI 10 samples for the CapCognition SDK.
+[![MAUI Core](https://img.shields.io/nuget/v/CapCognition.Maui.Core?label=MAUI.Core)](https://www.nuget.org/packages/CapCognition.MAUI.Core)
+[![MAUI](https://img.shields.io/nuget/v/CapCognition.Maui?label=MAUI)](https://www.nuget.org/packages/CapCognition.MAUI)
+[![Barcode](https://img.shields.io/nuget/v/CapCognition.Maui.BarcodeScanning?label=Barcode)](https://www.nuget.org/packages/CapCognition.Maui.BarcodeScanning)
+[![LPR](https://img.shields.io/nuget/v/CapCognition.Maui.LPR?label=LPR)](https://www.nuget.org/packages/CapCognition.Maui.LPR)
+[![YOLO](https://img.shields.io/nuget/v/CapCognition.Maui.YoloModelDetection?label=YOLO)](https://www.nuget.org/packages/CapCognition.Maui.YoloModelDetection)
+
+Depending on your use case, you may not need all packages.
+
+## Practical .NET MAUI 10 samples for the CapCognition SDK.
 
 This repository demonstrates how to use CapCognition in mobile applications for real-time camera capture, barcode recognition, QR code recognition, license plate recognition, YOLO-based object detection and custom computer vision workflows.
 
