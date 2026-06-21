@@ -1,6 +1,6 @@
-# CapCognition .NET MAUI Samples
+# CapCognition .NET MAUI 10 Samples
 
-Practical .NET MAUI samples for the CapCognition SDK.
+Practical .NET MAUI 10 samples for the CapCognition SDK.
 
 This repository demonstrates how to use CapCognition in mobile applications for real-time camera capture, barcode recognition, QR code recognition, license plate recognition, YOLO-based object detection and custom computer vision workflows.
 
@@ -59,15 +59,13 @@ The CapCognition .NET MAUI samples are intended for mobile platforms:
 | -------- | ----------------------------------------- |
 | Android  | Supported                                 |
 | iOS      | Supported                                 |
-| Windows  | Not supported for MAUI camera recognition |
-| macOS    | Not supported for MAUI camera recognition |
 
 The sample focuses on mobile camera-based recognition scenarios.
 
 ## Requirements
 
 * .NET SDK
-* .NET MAUI workload
+* .NET MAUI 9 & 10 workload
 * Visual Studio, Visual Studio Code or JetBrains Rider
 * Android SDK for Android builds
 * Xcode and macOS for iOS builds
