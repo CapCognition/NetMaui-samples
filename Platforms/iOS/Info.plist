@@ -28,5 +28,15 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used for testing the library</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Storing pictures</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Reading pictures</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 </dict>
 </plist>
