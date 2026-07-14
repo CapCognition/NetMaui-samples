@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<views1:DisposableContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:CapCognition.Maui.Views;assembly=CapCognition.Maui"
+             xmlns:views1="clr-namespace:NetMaui_samples.Views"
              x:Class="NetMaui_samples.Views.BarcodeMainPage"
              BackgroundColor="{StaticResource Background}">
-    <ContentPage.Content>
+    <views1:DisposableContentPage.Content>
 
         <Grid>
             <views:RecognitionView
@@ -15,5 +16,5 @@
                 UseFrontCamera="False"
                 FillPreviewToView="True"/>
         </Grid>
-    </ContentPage.Content>
-</ContentPage>
+    </views1:DisposableContentPage.Content>
+</views1:DisposableContentPage>

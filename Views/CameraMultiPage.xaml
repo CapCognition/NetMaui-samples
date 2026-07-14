@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<views11:DisposableContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:CapCognition.Maui.Views;assembly=CapCognition.Maui"
              xmlns:views11="clr-namespace:NetMaui_samples.Views"
              x:Class="NetMaui_samples.Views.CameraMultiPage"
              BackgroundColor="{StaticResource Background}"
              x:DataType="views11:CameraMultiPage">
-    <ContentPage.Content>
+    <views11:DisposableContentPage.Content>
 
         <Grid
             RowDefinitions="50,*,100"
@@ -84,5 +84,5 @@
                 Margin="10"/>
 
         </Grid>
-    </ContentPage.Content>
-</ContentPage>
+    </views11:DisposableContentPage.Content>
+</views11:DisposableContentPage>

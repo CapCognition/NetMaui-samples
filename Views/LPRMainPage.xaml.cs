@@ -6,7 +6,7 @@ using SkiaSharp.Views.Maui.Controls;
 namespace NetMaui_samples.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class LPRMainPage : ContentPage
+public partial class LPRMainPage : DisposableContentPage
 {
     public LPRMainPage(List<RecognitionOptions> options)
     {
@@ -23,35 +23,24 @@ public partial class LPRMainPage : ContentPage
         _licensePlateOptions = RecognitionView.GetOption<LicensePlateDetectionRecognitionOptions>();
 
         Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        if (RecognitionView.Initialized)
-        {
-            OpenCamera();
-        }
+        OpenCamera();
     }
+
     private async void OnLoaded(object? sender, EventArgs e)
     {
-        try
+        var result = await RecognitionView.RequestAllPermissionAsync();
+        if (!result)
         {
-            var result = await RecognitionView.RequestAllPermissionAsync();
-            if (!result)
-            {
-                await Navigation.PopAsync();
-            }
+            await Navigation.PopAsync();
+        }
 
-            Loaded -= OnLoaded;
-            OpenCamera();
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-        }
+        OpenCamera();
     }
 
     protected override void OnDisappearing()
@@ -60,16 +49,9 @@ public partial class LPRMainPage : ContentPage
         base.OnDisappearing();
     }
 
-    private void OnUnloaded(object? sender, EventArgs e)
-    {
-        Unloaded -= OnUnloaded;
-        RecognitionView.Terminate();
-        _recognitionOptions.Dispose();
-    }
-
     private void OpenCamera()
     {
-        if (RecognitionView.CameraIsOpen)
+        if (!RecognitionView.Initialized || RecognitionView.CameraIsOpen)
         {
             return;
         }
@@ -94,6 +76,16 @@ public partial class LPRMainPage : ContentPage
 
         DoStartContinuousRecognition();
         Console.WriteLine("###Recog started");
+    }
+
+    private void CloseCamera()
+    {
+        if (!RecognitionView.CameraIsOpen)
+        {
+            return;
+        }
+
+        RecognitionView.CloseCamera();
     }
 
     private void DoStartContinuousRecognition()
@@ -133,6 +125,15 @@ public partial class LPRMainPage : ContentPage
         {
             LPPreview.Source = (SKBitmapImageSource)bitmapClone;
         });
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        Loaded -= OnLoaded;
+        _recognitionOptions.Dispose();
+        RecognitionView.Terminate();
     }
 
     private List<RecognitionOptions> _recognitionOptions;
